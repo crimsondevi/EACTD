@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8479232104725442974
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8479232104725442972}
+  - component: {fileID: 8479232104725442973}
+  m_Layer: 0
+  m_Name: GameController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8479232104725442972
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8479232104725442974}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8479232104725442973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8479232104725442974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 028ad97158366de4e8e716ca9f4e5bec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mana: 0
+  towers:
+  - {fileID: 7607681990452663363, guid: 31be1bfe0d64a0c438968ea1228e2045, type: 3}
+  - {fileID: 277728383963857022, guid: e54ffae2bea6d7249afbf36efb086818, type: 3}
+  - {fileID: 5448564496518125065, guid: c7312126de5c7294a914e122c1c4b143, type: 3}
+  gameState: {fileID: 0}
+  buildOptions: {fileID: 0}
+  selectedOption: {fileID: 0}
+  resources: {fileID: 0}
+  gameGrid: {fileID: 0}
+  currentState: 0
+  currentSelect: 0

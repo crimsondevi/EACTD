@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\marku\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\marku\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_EACTDD.-2085705527.00" t="ExcludeRecursive" />
+    <e p="C:\Users\marku\EACTDD" t="IncludeRecursive">
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="AOETower.cs" t="Include" />
+          <e p="BasicTower.cs" t="Include" />
+          <e p="DamageTower.cs" t="Include" />
+          <e p="EditorScripts" t="Include">
+            <e p="GameGridEditorScript.cs" t="Include" />
+            <e p="SpawnEditorScript.cs" t="Include" />
+          </e>
+          <e p="Enemy.cs" t="Include" />
+          <e p="GameController.cs" t="Include" />
+          <e p="GameGrid.cs" t="Include" />
+          <e p="GathererTower.cs" t="Include" />
+          <e p="IDamageable.cs" t="Include" />
+          <e p="IDealDamage.cs" t="Include" />
+          <e p="MapData.cs" t="Include" />
+          <e p="MapNode.cs" t="Include" />
+          <e p="NodeTile.cs" t="Include" />
+          <e p="PathController.cs" t="Include" />
+          <e p="RadiusIndicator.cs" t="Include" />
+          <e p="SpawnController.cs" t="Include" />
+          <e p="Timer.cs" t="Include" />
+          <e p="ToolTip.cs" t="Include" />
+          <e p="Tower.cs" t="Include" />
+        </e>
+        <e p="TilemapTest.cs" t="Include" />
+      </e>
+      <e p="EACTDD.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
