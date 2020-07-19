@@ -5,9 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class MapNode : MonoBehaviour
 {
-    private int xIndex;
-    private int yIndex;
+    public int xIndex;
+    public int yIndex;
 
+    public bool goal;
+    public MapNode child;
+    public List<MapNode> neighbours = new List<MapNode>();
+    
     public SpriteRenderer sr;
     public GameObject occupant;
 

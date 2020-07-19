@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
+using Modular;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,13 +22,23 @@ public class GameGrid : MonoBehaviour
     public MapNode selectedNode;
     public MapNode hoveredNode;
     public MapNode prevHoveredNode;
+
+    public MapNodeVariable StartNode;
+    public MapNodeVariable EndNode;
+    
     public LayerMask layerMask;
 
     public TextAsset jsonFile;
 
     private IEnumerator tooltipRoutine;
     public GameObject ToolTip;
-    
+
+
+    void Start()
+    {
+        GenerateFromJson();
+        UpdateMap();
+    }
     void Update()
     {
         hoveredNode = GetMapNode();
@@ -129,10 +140,11 @@ public class GameGrid : MonoBehaviour
                 mapNode.sr = mapNode.GetComponent<SpriteRenderer>();
                 mapNode.defaultColor = mapNode.isPath ? Color.grey : Color.white;
                 mapNode.transform.SetParent(this.gameObject.transform);
-                mapNode.Initialize(x, y); 
+                mapNode.Initialize(x, y);
                 _mapNodes[x, y] = mapNode;
             }
         }
+        AssignNeighbours();
     }
     public void GenerateFromJson()
     {
@@ -157,6 +169,16 @@ public class GameGrid : MonoBehaviour
             {
                 MapNode mapNode = Instantiate(nodePrefab).GetComponent<MapNode>();
                 mapNode.sr = mapNode.GetComponent<SpriteRenderer>();
+                if (mapData.NodeTypes[y * mapWidth + x] == -1)
+                {
+                    mapNode.isPath = true; 
+                    StartNode.SetValue(mapNode);
+                }
+                if (mapData.NodeTypes[y * mapWidth + x] == -2)
+                {
+                    mapNode.isPath = true; 
+                    EndNode.SetValue(mapNode);
+                }
                 if (mapData.NodeTypes[y * mapWidth + x] == 1)
                 {
                     mapNode.isPath = true;
@@ -167,6 +189,8 @@ public class GameGrid : MonoBehaviour
                 _mapNodes[x, y] = mapNode;
             }
         }
+        
+        AssignNeighbours();
 
     }
     private void ClearMap()
@@ -180,6 +204,61 @@ public class GameGrid : MonoBehaviour
                     DestroyImmediate(_mapNodes[x, y].gameObject);
                     _mapNodes[x, y] = null;
                 }
+            }
+        }
+    }
+
+    public void AssignNeighbours()
+    {
+        for (int y = 0; y < mapWidth; y++)
+        {
+            for (int x = 0; x < mapWidth; x++)
+            {
+                if (y == 0 && x == 0)
+                {
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x + 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y + 1]);
+                } else if (y == 0 && x == mapWidth - 1)
+                {
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x - 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y + 1]);
+                } else if (y == mapWidth - 1 && x == 0)
+                {
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x + 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y - 1]);
+                } else if (y == mapWidth - 1 && x == mapWidth - 1)
+                {
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x - 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y - 1]);
+                } else if (y == 0)
+                {
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x + 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x - 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y + 1]);
+                } else if (y == mapWidth - 1)
+                {
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x + 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x - 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y - 1]);
+                } else if (x == 0)
+                {
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x + 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y + 1]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y - 1]);
+                } else if (x == mapWidth - 1)
+                {
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x - 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y + 1]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y - 1]);
+                }
+                else
+                {
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x + 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x - 1, y]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y + 1]);
+                    _mapNodes[x, y].neighbours.Add(_mapNodes[x, y - 1]);
+                }
+                
             }
         }
     }

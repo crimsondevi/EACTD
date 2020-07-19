@@ -15,12 +15,11 @@ public class Enemy : MonoBehaviour, IDamageable
     
     private Rigidbody2D rb;
 
-    public void Initialize(int health, float speed, PathController pathController)
+    public void Initialize(int health, float speed, MapNode start)
     {
         this.health = health;
         this.speed = speed;
-        _pathController = pathController;
-        destination = pathController.nextMapNode(index);
+        destination = start;
     }
 
     private void Start()
@@ -49,8 +48,7 @@ public class Enemy : MonoBehaviour, IDamageable
             }
             if (direction.magnitude <= 0.1)
             {
-                index++;
-                destination = _pathController.nextMapNode(index);
+                destination = destination.child;
             }
         }
         else

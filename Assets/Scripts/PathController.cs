@@ -10,14 +10,9 @@ public class PathController : MonoBehaviour
     public MapNode start;
     public MapNode end;
 
-    public MapNode nextMapNode(int index)
+    public MapNode nextMapNode(MapNode node)
     {
-        if (index == Positions.Count - 1)
-            return null;
-        else
-        {
-            return Positions[index + 1];
-        }
+        return node.child;
     }
 
     public void Start()
