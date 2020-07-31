@@ -37,15 +37,8 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         if (destination != null)
         {
+            transform.position = Vector2.MoveTowards(this.transform.position, destination.transform.position, speed * Time.deltaTime);
             Vector2 direction = (destination.transform.position - this.transform.position);
-            if (direction.magnitude > speed * Time.deltaTime)
-            {
-                rb.velocity = direction.normalized * speed;
-            }
-            else
-            {
-                rb.velocity = direction.normalized * (1 / Time.deltaTime * direction.magnitude);
-            }
             if (direction.magnitude <= 0.1)
             {
                 destination = destination.child;

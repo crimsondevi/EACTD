@@ -11,7 +11,12 @@ public class Pathfinding : MonoBehaviour
     private bool[,] visited = new bool[20,20];
     
     public MapNodeVariable StartNode;
-    
+
+    private void Start()
+    {
+        BFS(StartNode.Value);
+    }
+
     public MapNode BFS(MapNode startNode)
     {
         for (int i = 0; i < 20; i++)
@@ -28,7 +33,6 @@ public class Pathfinding : MonoBehaviour
         while (mapNodesQueue.Any())
         {
             MapNode mapNode = mapNodesQueue.Dequeue();
-            print(mapNode.xIndex);
             if (mapNode.goal)
             {
                 return mapNode;
