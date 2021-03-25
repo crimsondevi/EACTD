@@ -260,5 +260,6 @@ MonoBehaviour:
   _radiusIndicator: {fileID: 0}
   gameController: {fileID: 0}
   gameGrid: {fileID: 0}
-  gatherValue: 5
-  gatherTime: 1
+  currentChunks: 0
+  chunkCap: 3
+  gatherTime: 2

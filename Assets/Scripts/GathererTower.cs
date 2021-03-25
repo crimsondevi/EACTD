@@ -9,7 +9,8 @@ public class GathererTower : Tower
     public GameController gameController;
     public GameGrid gameGrid;
 
-    public float gatherValue;
+    public int currentChunks; 
+    public int chunkCap;
     public float gatherTime;
 
     private float cooldown;
@@ -35,15 +36,17 @@ public class GathererTower : Tower
 
     public void GatherMana()
     {
-        if (cooldown >= 0)
+        if (currentChunks < chunkCap)
         {
-            cooldown -= Time.deltaTime;
+            if (cooldown >= 0)
+            {
+                cooldown -= Time.deltaTime;
+            }
+            else
+            {
+                currentChunks++;
+                cooldown = gatherTime;
+            }
         }
-        else
-        {
-            gameController.mana += gatherValue;
-            cooldown = gatherTime;
-        }
-        
     }
 }

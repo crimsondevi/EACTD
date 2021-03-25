@@ -272,6 +272,7 @@ public class GameGrid : MonoBehaviour
     {
         
     }
+    
     public void SetMapNodes()
     {
         _mapNodes = new MapNode[mapWidth, mapWidth];

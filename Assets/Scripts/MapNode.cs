@@ -7,7 +7,7 @@ public class MapNode : MonoBehaviour
 {
     public int xIndex;
     public int yIndex;
-
+    
     public bool goal;
     public MapNode child;
     public List<MapNode> neighbours = new List<MapNode>();
@@ -20,7 +20,16 @@ public class MapNode : MonoBehaviour
     public bool hovered = false;
 
     public Color defaultColor = Color.white;
-        
+
+    public Affinity affinity;
+
+    public enum Affinity
+    {
+        Abyssal,
+        Infernal,
+        Primordial,
+    }
+    
     public void Initialize(int x, int y)
     {
         xIndex = x;
@@ -35,13 +44,26 @@ public class MapNode : MonoBehaviour
         {
             defaultColor = Color.grey;
         }
-    }
-
-    void Update()
-    {
-        //if (hovered)
-        //    Hover();
-        //else UnHover();
+        else
+        {
+            float random = Random.value;
+            if (random < 0.33)
+            {
+                affinity = Affinity.Abyssal;
+                defaultColor = new Color(0, 0, 255, 100); 
+            } 
+            else if (random < 0.66)
+            {
+                affinity = Affinity.Infernal;
+                defaultColor = new Color(0, 255, 0, 100); 
+            }
+            else
+            {
+                affinity = Affinity.Primordial;
+                defaultColor = new Color(255, 0, 0, 100); 
+            }
+        }
+        sr.color = defaultColor;
     }
 
     public void setOccupant(GameObject tower)
