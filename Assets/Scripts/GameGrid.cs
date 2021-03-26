@@ -7,18 +7,20 @@ using Modular;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 public class GameGrid : MonoBehaviour
 {
-    public int mapWidth;
+    public MapDataVariable mapDataVariable;
+    private MapData mapData;
     
     public GameObject nodePrefab;
 
     public LineRenderer lr;
     
-    [SerializeField] public MapNode[,] _mapNodes;
+    private MapNode[,] _mapNodes;
     public MapNode selectedNode;
     public MapNode hoveredNode;
     public MapNode prevHoveredNode;
@@ -32,14 +34,24 @@ public class GameGrid : MonoBehaviour
 
     private IEnumerator tooltipRoutine;
     public GameObject ToolTip;
+    public ToolTip toolTipScript;
+    public float toolTipDelay = 0.4f;
 
-
-    void Start()
+    public bool toolTipOn = true;
+    
+    
+    private void Start()
     {
+        mapData = mapDataVariable.Value;
+
+        toolTipScript = ToolTip.gameObject.GetComponent<ToolTip>();
+        ToolTip.SetActive(false);
+        
         GenerateFromJson();
         UpdateMap();
     }
-    void Update()
+    
+    private void Update()
     {
         hoveredNode = GetMapNode();
         
@@ -47,7 +59,8 @@ public class GameGrid : MonoBehaviour
         {
             LineRendererHover(hoveredNode.transform);
             
-            TooltipControl();
+            if (toolTipOn)
+                TooltipControl();
 
             prevHoveredNode = hoveredNode;
         }
@@ -67,11 +80,9 @@ public class GameGrid : MonoBehaviour
     IEnumerator TooltipDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        ToolTip tooltip = ToolTip.gameObject.GetComponent<ToolTip>();
-        tooltip.name.text = "Name of Occupant";
-        tooltip.info.text = "Different info";
+        toolTipScript.name.text = "Name of Occupant";
+        toolTipScript.info.text = "Different info";
         ToolTip.SetActive(true);
-        
     }
 
     private void TooltipControl()
@@ -79,7 +90,7 @@ public class GameGrid : MonoBehaviour
         ToolTip.transform.position = Input.mousePosition;
         if (tooltipRoutine == null)
         {
-            tooltipRoutine = TooltipDelay(1f);
+            tooltipRoutine = TooltipDelay(toolTipDelay);
             StartCoroutine(tooltipRoutine);
         } 
         else if (prevHoveredNode != hoveredNode)
@@ -89,7 +100,7 @@ public class GameGrid : MonoBehaviour
                 StopCoroutine(tooltipRoutine);
                 ToolTip.SetActive(false);
             }
-            tooltipRoutine = TooltipDelay(1f);
+            tooltipRoutine = TooltipDelay(toolTipDelay);
             StartCoroutine(tooltipRoutine);
         }
     }
@@ -116,7 +127,7 @@ public class GameGrid : MonoBehaviour
         lr.startColor = lr.endColor = c1;
         lr.startWidth = lr.endWidth = 0.1f;
         lr.positionCount = 5;
-        lr.useWorldSpace = false;
+        lr.useWorldSpace = true;
     }
     
     public void GenerateMap()
@@ -131,10 +142,10 @@ public class GameGrid : MonoBehaviour
             ClearMap();
         }
 
-        _mapNodes = new MapNode[mapWidth, mapWidth];
-        for (int y = 0; y < mapWidth; y++)
+        _mapNodes = new MapNode[mapData.Width, mapData.Height];
+        for (int y = 0; y < mapData.Height; y++)
         {
-            for (int x = 0; x < mapWidth; x++)
+            for (int x = 0; x < mapData.Width; x++)
             {
                 MapNode mapNode = Instantiate(nodePrefab).GetComponent<MapNode>();
                 mapNode.sr = mapNode.GetComponent<SpriteRenderer>();
@@ -157,13 +168,13 @@ public class GameGrid : MonoBehaviour
             SetMapNodes();
             ClearMap();
         }
-
-        MapData mapData = JsonUtility.FromJson<MapData>(jsonFile.text);
-        mapWidth = mapData.Dimension;
         
-        _mapNodes = new MapNode[mapWidth, mapWidth];
+        int mapWidth = mapData.Width;
+        int mapHeight = mapData.Height;
+        
+        _mapNodes = new MapNode[mapWidth, mapHeight];
 
-        for (int y = 0; y < mapWidth; y++)
+        for (int y = 0; y < mapHeight; y++)
         {
             for (int x = 0; x < mapWidth; x++)
             {
@@ -195,9 +206,9 @@ public class GameGrid : MonoBehaviour
     }
     private void ClearMap()
     {
-        for (int y = 0; y < _mapNodes.GetLength(0); y++)
+        for (int y = 0; y < _mapNodes.GetLength(1); y++)
         {
-            for (int x = 0; x < _mapNodes.GetLength(1); x++)
+            for (int x = 0; x < _mapNodes.GetLength(0); x++)
             {
                 if (_mapNodes[x, y] != null)
                 {
@@ -210,7 +221,10 @@ public class GameGrid : MonoBehaviour
 
     public void AssignNeighbours()
     {
-        for (int y = 0; y < mapWidth; y++)
+        int mapWidth = mapData.Width;
+        int mapHeight = mapData.Height;
+        
+        for (int y = 0; y < mapHeight; y++)
         {
             for (int x = 0; x < mapWidth; x++)
             {
@@ -222,11 +236,11 @@ public class GameGrid : MonoBehaviour
                 {
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x - 1, y]);
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x, y + 1]);
-                } else if (y == mapWidth - 1 && x == 0)
+                } else if (y == mapHeight - 1 && x == 0)
                 {
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x + 1, y]);
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x, y - 1]);
-                } else if (y == mapWidth - 1 && x == mapWidth - 1)
+                } else if (y == mapHeight - 1 && x == mapWidth - 1)
                 {
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x - 1, y]);
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x, y - 1]);
@@ -235,7 +249,7 @@ public class GameGrid : MonoBehaviour
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x + 1, y]);
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x - 1, y]);
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x, y + 1]);
-                } else if (y == mapWidth - 1)
+                } else if (y == mapHeight - 1)
                 {
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x + 1, y]);
                     _mapNodes[x, y].neighbours.Add(_mapNodes[x - 1, y]);
@@ -262,10 +276,10 @@ public class GameGrid : MonoBehaviour
             }
         }
     }
-
+    
     public void SaveMap()
     {
-        
+        //TODO: implement save map
     }
 
     public void LoadMap()
@@ -275,10 +289,10 @@ public class GameGrid : MonoBehaviour
     
     public void SetMapNodes()
     {
-        _mapNodes = new MapNode[mapWidth, mapWidth];
-        for (int y = 0; y < _mapNodes.GetLength(0); y++)
+        _mapNodes = new MapNode[mapData.Width, mapData.Height];
+        for (int y = 0; y < _mapNodes.GetLength(1); y++)
         {
-            for (int x = 0; x < _mapNodes.GetLength(1); x++)
+            for (int x = 0; x < _mapNodes.GetLength(0); x++)
             {
                     _mapNodes[x, y] = transform.GetChild((y * _mapNodes.GetLength(0)) + x).GetComponent<MapNode>();
             }
@@ -288,9 +302,9 @@ public class GameGrid : MonoBehaviour
     {
         if (_mapNodes == null)
             SetMapNodes();
-        for (int y = 0; y < _mapNodes.GetLength(0); y++)
+        for (int y = 0; y < _mapNodes.GetLength(1); y++)
         {
-            for (int x = 0; x < _mapNodes.GetLength(1); x++)
+            for (int x = 0; x < _mapNodes.GetLength(0); x++)
             {
                 if (_mapNodes[x, y].isPath)
                     _mapNodes[x, y].defaultColor = Color.grey;
@@ -317,7 +331,7 @@ public class GameGrid : MonoBehaviour
     public MapNode GetMapNode()
     {
         Vector3 mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit  = Physics2D.Raycast(mp, Vector2.right,1.5f, layerMask);
+        RaycastHit2D hit  = Physics2D.Raycast(mp, Vector2.right,0.01f, layerMask);
         if (hit.collider != null)
         {
             return hit.transform.gameObject.GetComponent<MapNode>();

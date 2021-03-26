@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
  
-public class MapData
+public class MapData 
 {
-    public int Dimension;
+    public int Width;
+    public int Height;
     public int[] NodeTypes;
 }

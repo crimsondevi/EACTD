@@ -7,23 +7,29 @@ using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
 {
+    public MapDataVariable mapDataVariable;
+    private MapData mapData;
+    
     private Queue<MapNode> mapNodesQueue;
-    private bool[,] visited = new bool[20,20];
+    private bool[,] visited;
     
     public MapNodeVariable StartNode;
 
     private void Start()
     {
+        mapData = mapDataVariable.Value;
+        visited = new bool[mapData.Width, mapData.Height];
         BFS(StartNode.Value);
+        
     }
 
     public MapNode BFS(MapNode startNode)
     {
-        for (int i = 0; i < 20; i++)
+        for (int y = 0; y < mapData.Height; y++)
         {
-            for (int j = 0; j < 20; j++)
+            for (int x = 0; x < mapData.Width; x++)
             {
-                visited[i, j] = false;
+                visited[x, y] = false;
             }
         }
         

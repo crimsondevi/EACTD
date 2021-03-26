@@ -46,6 +46,9 @@ public class MapNode : MonoBehaviour
         }
         else
         {
+            //TODO: implement affinity through perlin noise for a more uniform distribution
+            // Should probably be implemented in GameGrid
+            
             float random = Random.value;
             if (random < 0.33)
             {
