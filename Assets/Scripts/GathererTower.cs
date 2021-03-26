@@ -23,6 +23,7 @@ public class GathererTower : Tower
 
     private void Start()
     {
+        name = "Gatherer Tower";
         base.Start();
         cooldown = gatherTime;
     }

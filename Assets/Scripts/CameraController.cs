@@ -16,11 +16,11 @@ public class CameraController : MonoBehaviour
     
     public float zoomSpeed = 1;
     
-    private float maxX = 30;
-    private float minX = 0;
+    private float maxX = 15;
+    private float minX = -15;
 
-    private float maxY = 20;
-    private float minY = 0;
+    private float maxY = 10;
+    private float minY = -10;
 
     private Vector2 lastMousePosition;
     public float panSpeed = 1;

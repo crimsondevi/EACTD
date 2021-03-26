@@ -25,7 +25,13 @@ public class AOETower : DamageTower, IDealDamage
             }
         }
     }
-
+    
+    public void Start()
+    {
+        base.Start();
+        name = "AOE Tower";
+    }
+    
     public void DealDamage()
     {
         for (int i = 0; i < Targets.Count; i++)

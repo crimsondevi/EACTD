@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f2cacc638364e03a021f1814ceaedbd, type: 3}
-  m_Name: CurrentMapData
+  m_Script: {fileID: 11500000, guid: 968a89964d8d4fd1a8f2c88a09641a7f, type: 3}
+  m_Name: StartNodeList
   m_EditorClassIdentifier: 
   DeveloperDescription: 
-  jsonFile: {fileID: 4900000, guid: cb8750968c073a74894a4e374bcfe4cd, type: 3}
+  Value: []
   Resets: 0
+  DefaultValue: []

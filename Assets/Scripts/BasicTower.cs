@@ -25,6 +25,12 @@ public class BasicTower : DamageTower, IDealDamage
             }
         }
     }
+
+    public void Start()
+    {
+        base.Start();
+        name = "Basic Tower";
+    }
     
     public void DealDamage()
     {

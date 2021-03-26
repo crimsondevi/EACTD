@@ -10,13 +10,18 @@ public class SpawnController : MonoBehaviour
     public GameObject enemyPrefab;
     public int HealthToSpawn = 10;
     public float SpeedToSpawn = 0.5f;
-    
-    public MapNodeVariable start;
 
+    public MapNodeListVariable startNodeListVariable;
+
+    private int index = 0;
     public void SpawnEnemy(int health, float speed)
-    {
-        Enemy enemy = Object.Instantiate(enemyPrefab, start.Value.transform.position, Quaternion.identity)
+    {    
+        index++;
+        if (index > startNodeListVariable.Value.Count-1)
+            index = 0;
+
+        Enemy enemy = Object.Instantiate(enemyPrefab, startNodeListVariable.Value[index].transform.position, Quaternion.identity)
             .GetComponent<Enemy>();
-        enemy.Initialize(health, speed, start.Value);
+        enemy.Initialize(health, speed, startNodeListVariable.Value[index]);
     }
 }

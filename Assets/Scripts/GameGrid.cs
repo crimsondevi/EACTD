@@ -16,13 +16,15 @@ public class GameGrid : MonoBehaviour
     public MapDataVariable mapDataVariable;
     private MapData mapData;
     
+    public MapNodeListVariable startNodeListVariable;
+    
     public GameObject nodePrefab;
 
     public LineRenderer lr;
     
     private MapNode[,] _mapNodes;
     public MapNode selectedNode;
-    public MapNode hoveredNode;
+    public MapNodeVariable hoveredNode;
     public MapNode prevHoveredNode;
 
     public MapNodeVariable StartNode;
@@ -49,20 +51,22 @@ public class GameGrid : MonoBehaviour
         
         GenerateFromJson();
         UpdateMap();
+
+        transform.position = new Vector3(-mapData.Width / 2, -mapData.Height / 2, 0);
     }
     
     private void Update()
     {
-        hoveredNode = GetMapNode();
-        
-        if (hoveredNode != null)
+        hoveredNode.SetValue(GetMapNode());
+
+        if (hoveredNode.Value != null)
         {
-            LineRendererHover(hoveredNode.transform);
+            LineRendererHover(hoveredNode.Value.transform);
             
             if (toolTipOn)
                 TooltipControl();
 
-            prevHoveredNode = hoveredNode;
+            prevHoveredNode = hoveredNode.Value;
         }
         else
         {
@@ -80,8 +84,33 @@ public class GameGrid : MonoBehaviour
     IEnumerator TooltipDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        toolTipScript.name.text = "Name of Occupant";
-        toolTipScript.info.text = "Different info";
+        string name = "";
+        switch ((int) hoveredNode.Value.affinity)
+        {
+            case 0:
+                name = "Abyssal Tile";
+                break;
+            case 1:
+                name = "Infernal Tile";
+                break;
+            case 2:
+                name = "Primordial Tile";
+                break;
+        }
+
+        string info = "";
+        if (hoveredNode.Value.isOccupied)
+        {
+            info = "Is Occupied by " + hoveredNode.Value.occupant.GetComponent<Tower>().name;
+        }
+        else
+        {
+            info = "Tile is Unoccupied";
+        }
+        
+        toolTipScript.name.text = name;
+        toolTipScript.info.text = info;
+        
         ToolTip.SetActive(true);
     }
 
@@ -93,7 +122,7 @@ public class GameGrid : MonoBehaviour
             tooltipRoutine = TooltipDelay(toolTipDelay);
             StartCoroutine(tooltipRoutine);
         } 
-        else if (prevHoveredNode != hoveredNode)
+        else if (prevHoveredNode != hoveredNode.Value)
         {
             if (tooltipRoutine != null)
             {
@@ -158,22 +187,27 @@ public class GameGrid : MonoBehaviour
         AssignNeighbours();
     }
     public void GenerateFromJson()
-    {
+    {    
+        
         if (_mapNodes != null)
         {
             ClearMap();
         }
         else
         {
-            SetMapNodes();
-            ClearMap();
+            if (this.transform.childCount > 0)
+            {
+                SetMapNodes();
+                ClearMap();
+            }
         }
         
         int mapWidth = mapData.Width;
         int mapHeight = mapData.Height;
         
         _mapNodes = new MapNode[mapWidth, mapHeight];
-
+        List<MapNode> _startNodes = new List<MapNode>();
+        
         for (int y = 0; y < mapHeight; y++)
         {
             for (int x = 0; x < mapWidth; x++)
@@ -182,25 +216,27 @@ public class GameGrid : MonoBehaviour
                 mapNode.sr = mapNode.GetComponent<SpriteRenderer>();
                 if (mapData.NodeTypes[y * mapWidth + x] == -1)
                 {
-                    mapNode.isPath = true; 
-                    StartNode.SetValue(mapNode);
+                    mapNode.isPath = true;
+                    mapNode.defaultColor = Color.white;
+                    _startNodes.Add(mapNode);
                 }
                 if (mapData.NodeTypes[y * mapWidth + x] == -2)
                 {
                     mapNode.isPath = true; 
+                    mapNode.defaultColor = Color.black;
                     EndNode.SetValue(mapNode);
                 }
                 if (mapData.NodeTypes[y * mapWidth + x] == 1)
                 {
                     mapNode.isPath = true;
+                    mapNode.defaultColor = Color.gray;
                 }
-                mapNode.defaultColor = mapNode.isPath ? Color.grey : Color.white;
                 mapNode.transform.SetParent(this.gameObject.transform);
                 mapNode.Initialize(x, y); 
                 _mapNodes[x, y] = mapNode;
             }
         }
-        
+        startNodeListVariable.SetValue(_startNodes);
         AssignNeighbours();
 
     }
@@ -288,7 +324,7 @@ public class GameGrid : MonoBehaviour
     }
     
     public void SetMapNodes()
-    {
+    {    
         _mapNodes = new MapNode[mapData.Width, mapData.Height];
         for (int y = 0; y < _mapNodes.GetLength(1); y++)
         {
@@ -306,10 +342,12 @@ public class GameGrid : MonoBehaviour
         {
             for (int x = 0; x < _mapNodes.GetLength(0); x++)
             {
+                /*
                 if (_mapNodes[x, y].isPath)
                     _mapNodes[x, y].defaultColor = Color.grey;
                 else
                     _mapNodes[x, y].defaultColor = Color.white;
+                */
                 _mapNodes[x, y].sr.color = _mapNodes[x, y].defaultColor;
             }
         }

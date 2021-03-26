@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Security.Cryptography;
+using UnityEngine;
 
 [RequireComponent(typeof(CircleCollider2D))]
 public abstract class  Tower : MonoBehaviour
 {
     public MapNode mapNode;
+
+    public string name;
     
     public float Range;
     public CircleCollider2D _circleCol;

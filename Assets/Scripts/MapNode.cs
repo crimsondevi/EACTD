@@ -14,12 +14,13 @@ public class MapNode : MonoBehaviour
     
     public SpriteRenderer sr;
     public GameObject occupant;
+    public bool isOccupied = false;
 
     public bool isPath;
 
     public bool hovered = false;
 
-    public Color defaultColor = Color.white;
+    public Color defaultColor = Color.grey;
 
     public Affinity affinity;
 
@@ -40,11 +41,7 @@ public class MapNode : MonoBehaviour
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        if (isPath)
-        {
-            defaultColor = Color.grey;
-        }
-        else
+        if (!isPath)
         {
             //TODO: implement affinity through perlin noise for a more uniform distribution
             // Should probably be implemented in GameGrid
@@ -73,6 +70,7 @@ public class MapNode : MonoBehaviour
     {
         occupant = tower;
         occupant.transform.position = this.transform.position;
+        isOccupied = true;
     }
 
     public void Hover()

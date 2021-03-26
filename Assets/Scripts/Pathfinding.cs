@@ -9,6 +9,8 @@ public class Pathfinding : MonoBehaviour
 {
     public MapDataVariable mapDataVariable;
     private MapData mapData;
+
+    public MapNodeListVariable startNodeListVariable;
     
     private Queue<MapNode> mapNodesQueue;
     private bool[,] visited;
@@ -23,7 +25,7 @@ public class Pathfinding : MonoBehaviour
         
     }
 
-    public MapNode BFS(MapNode startNode)
+    public void BFS(MapNode startNode)
     {
         for (int y = 0; y < mapData.Height; y++)
         {
@@ -39,10 +41,6 @@ public class Pathfinding : MonoBehaviour
         while (mapNodesQueue.Any())
         {
             MapNode mapNode = mapNodesQueue.Dequeue();
-            if (mapNode.goal)
-            {
-                return mapNode;
-            }
             foreach (MapNode node in mapNode.neighbours)
             {
                 if (!visited[node.xIndex, node.yIndex] && node.isPath)
@@ -53,7 +51,6 @@ public class Pathfinding : MonoBehaviour
                 }
             }
         }
-        return null;
     }
 
 }
